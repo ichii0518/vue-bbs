@@ -1,15 +1,18 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <h1>掲示板</h1>
+  <Board ref="board"></Board>
+  <Form @onPosted="this.$refs.board.loadPosts()"></Form>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Board from "./components/Board.vue"
+import Form from './components/Form.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Board,
+    Form
   }
 }
 </script>
