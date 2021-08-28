@@ -10,7 +10,9 @@
 
 <script>
 import Post from './Post.vue'
-const moment = require("moment")
+import moment from "moment";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 export default {
     data(){
@@ -35,7 +37,18 @@ export default {
     },
     methods: {
         loadPosts() {
-            alert("コメントを読み込んだことにします")
+            let db = firebase.firestore();
+            let col = db.collection("comments")
+            col.get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, " => ", doc.data());
+                    let data = doc.data();
+                    data["time"] = data["time"].toDate();
+                    console.log(data)
+                    this.posts.push(data);
+                });
+            });
         }
     }
 }
