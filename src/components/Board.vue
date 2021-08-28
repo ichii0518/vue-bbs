@@ -4,7 +4,7 @@
             <Post :n="index + 1" :time="post.time" :id="post.id" 
                 :commenter="post.commenter" :comment="post.comment"
                 :replys="post.replys"
-                :setId="setId" :getPostIndexById="this.getPostIndexById">
+                :setId="setId" :getPostPathById="this.getPostPathById">
             </Post>
         </li>
     </ul>
@@ -101,14 +101,55 @@ export default {
             }
             return tree;
         },
+        getPostPathById(id){
+            let post = this.getPostById(id)
+            let path = ""
+            let currentNode = post
+            do {
+                let index = this.getPostIndexById(currentNode.id)
+                path = index + "/" + path
+                let parent = this.getPostById(currentNode.parentId)
+                currentNode = parent
+            } while (currentNode !== void 0);
+            path = path.slice(0, -1)
+            return path
+        },
         getPostIndexById(id) {
-            return this.posts.findIndex((post) => {
-                return post.id == id;
+            let self = this
+            let post = self.getPostById(id)
+            // 返信ではないpostの場合そのままのインデックスを取得
+            if (post.parentId === void 0) {
+                return self.posts.findIndex((p) => {
+                    return p == post;
+                }) + 1;
+            }
+            // 返信である場合、親を取得し、親の返信の中でのインデックスを取得する
+            let parent = self.getPostById(post.parentId)
+            return parent.replys.findIndex((p) => {
+                    return p == post;
             }) + 1;
+        },
+        getPostById(id) {
+            let self = this
+            for (let post of self.posts) {
+                let ret = self.searchPostById(post, id);
+                if (ret !== void 0) return ret
+            }
+        },
+        searchPostById(currentPost, id) {
+            // そのpostのidが探しているものと一致するならそれを返す
+            if (currentPost.id == id) {
+                return currentPost
+            }
+            // 全ての返信を探す
+            for (let reply of currentPost.replys) {
+                let ret = this.searchPostById(reply, id)
+                if (ret !== void 0) return ret
+            }
         }
     },
     created() {
-        console.log("最初のコメントを読み込んでいます");
+        console.log("コメントを初期化しています");
         this.loadPosts();
     }
 }

@@ -2,7 +2,7 @@
     <div class="post">
         <p><span v-if="isReply">Re:</span>
         {{ n }} {{ commenter }} {{ format(time) }}
-        <a href="#form" @click="setId(id, getPostIndexById(id))" class="reply">返信</a>
+        <a href="#form" @click="setId(id, getPostPathById(id))" class="reply">返信</a>
         </p>
         <p>{{ comment }}</p>
         <p v-if="hasReply()">
@@ -16,7 +16,7 @@
             <Post :n="index + 1" :time="post.time" :id="post.id"
                 :commenter="post.commenter" :comment="post.comment"
                 :replys="post.replys" :isReply="true"
-                :setId="setId" :getPostIndexById="getPostIndexById">
+                :setId="setId" :getPostPathById="getPostPathById">
             </Post>
         </li>
     </ul></transition>
@@ -35,7 +35,7 @@ export default {
         replys: Array,
         isReply: Boolean,
         setId: Function,
-        getPostIndexById: Function
+        getPostPathById: Function
     },
     emits: ["replyLinkClicked"],
     data(){
