@@ -10,26 +10,13 @@
 
 <script>
 import Post from './Post.vue'
-import moment from "moment";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
 export default {
     data(){
         return{
-            posts: [
-                {
-                    commenter: "a",
-                    time: moment().toDate(),
-                    comment: "test1"
-                },
-                {
-                    commenter: "b",
-                    time: moment().toDate(),
-                    comment: "test2"
-                },
-            ]
-            //loadPosts()
+            posts: []
         }
     },
     components: {
@@ -37,19 +24,23 @@ export default {
     },
     methods: {
         loadPosts() {
+            let newposts = [];
             let db = firebase.firestore();
             let col = db.collection("comments")
             col.get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
                     let data = doc.data();
-                    data["time"] = data["time"].toDate();
-                    console.log(data)
-                    this.posts.push(data);
+                    data.time = data.time.toDate();
+                    newposts.push(data);
                 });
+                this.posts = newposts;
             });
         }
+    },
+    created() {
+        console.log("最初のコメントを読み込んでいます");
+        this.loadPosts();
     }
 }
 </script>
