@@ -1,9 +1,10 @@
 <template>
-    <form id="form">
-        <p><span v-if="isReply">返信先：{{ destNum }} <button @click="cancelReplying" onclick="return false">返信をキャンセル</button></span>
-         名前：<input type = "text" v-model="name"></p>
-        <p>コメント：<textarea v-model="comment" cols="70" rows="14"></textarea></p>
-        <button @click="postComment" onclick="return false">送信</button>
+    <form id="form" @submit.prevent="postComment">
+        <p><span v-if="isReply">返信先：{{ destNum }} 
+            <button @click="cancelReplying" onclick="return false">返信をキャンセル</button></span>
+         名前：<input type = "text" v-model="name" required></p>
+        <p>コメント：<textarea v-model="comment" cols="70" rows="14" required></textarea></p>
+        <input type="submit">
     </form>
 </template>
 
