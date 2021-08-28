@@ -2,7 +2,8 @@
     <ul>
         <li v-for="(post, index) in posts" :key="index">
             <Post :n="index + 1" :time="post.time" 
-                :commenter="post.commenter" :comment="post.comment">
+                :commenter="post.commenter" :comment="post.comment"
+                :replys="post.replys">
             </Post>
         </li>
     </ul>
@@ -32,9 +33,23 @@ export default {
                     // doc.data() is never undefined for query doc snapshots
                     let data = doc.data();
                     data.time = data.time.toDate();
+                    data.id = doc.id;
+                    data.replys = [];
                     newposts.push(data);
                 });
+                //投稿を木にする処理
+                newposts.forEach((newpost) => {
+                    if (newpost.parentId !== void 0) {
+                        // 親を探す
+                        let parent = newposts.filter((post) => {
+                            return post.id == newpost.parentId;
+                        })[0];
+                        // 親のリプライとして追加
+                        parent.replys.push(newpost);
+                    }
+                });
                 this.posts = newposts;
+                console.log(this.posts[0])
             });
         }
     },
@@ -49,7 +64,6 @@ export default {
     li {
         list-style-type: none;
         position: relative;
-        margin: 1rem auto;
     }
 
     li::before {
@@ -72,7 +86,7 @@ export default {
         border-top: solid 0.1rem black;
         width: 1em;
         height: 10px;
-        top: 60%;
+        top: 2em;
         left: -1em;
     }
 </style>
