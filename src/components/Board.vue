@@ -37,7 +37,7 @@ export default {
                     data.replys = [];
                     posts.push(data);
                     });
-                this.posts = this.makeTree(posts);
+                this.posts = this.sortByTime(this.makeTree(posts));
                 });
         },
         makeTree(posts) {
@@ -86,6 +86,16 @@ export default {
                 //どこにもつけられなければfalseになる
                 return result;
             }
+        },
+        sortByTime(tree) {
+            let self = this
+            tree.sort((a, b) => a.time - b.time);
+            for (let node of tree) {
+                if (node.replys.length != 0){
+                    self.sortByTime(node.replys)
+                }
+            }
+            return tree;
         },
         getPostIndexById(id) {
             return this.posts.findIndex((post) => {
