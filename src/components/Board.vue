@@ -46,7 +46,8 @@ export default {
         },
         makeTree(posts) {
             let self = this;
-            // 返信ではないコメントをツリーに追加
+            /* 返信ではないコメントをツリーに追加、
+            追加したコメントをpostsから消していく*/
             let tree = [];
             posts.forEach((post, index) => {
                 if (post.parentId === void 0) {
@@ -54,13 +55,15 @@ export default {
                     delete posts[index]
                 }
             });
+            // 配列を詰める
             posts = posts.filter((element) => {return element !== void 0});
             
+            // postsが空になるまで繰り返す
             while (posts.length != 0){
                 // 全てのpostをループ
                 posts.forEach((post, index) => {
                     let result = false;
-                    // ツリーにpostを追加する
+                    // ツリーにpostを追加する、成功したらpostsから消す
                     for (let treeNode of tree) {
                         result = self.addPost(treeNode, post);
                         if (result) {
@@ -69,6 +72,7 @@ export default {
                         }
                     }
                 });
+                // 配列を詰める
                 posts = posts.filter((element) => {return element !== void 0});
             }
             return tree;
@@ -86,8 +90,8 @@ export default {
                     result = self.addPost(treeNode, post)
                     if (result) break //つけられたらfor文を抜ける
                 }
-                //このresultは子孫ノードのどこかにつけられればtrueになり、
-                //どこにもつけられなければfalseになる
+                /*このresultは子孫ノードのどこかにつけられればtrueになり、
+                どこにもつけられなければfalseになる*/
                 return result;
             }
         },
