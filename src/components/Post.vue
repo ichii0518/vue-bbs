@@ -1,13 +1,16 @@
 <template>
     <div class="post">
         <p><span v-if="isReply">Re:</span>
-        {{ n }} {{ commenter }} {{ moment(time).format("YYYY-MM-DD HH:mm:ss") }}
+        {{ n }} {{ commenter }} {{ format(time) }}
         <a href="#form" @click="$emit('replyLinkClicked', id)">返信</a>
         </p>
         <p>{{ comment }}</p>
+        <p v-if="hasReply()">
+            <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
+        </p>
     </div>
-    <!--再帰的に呼び出し-->
-    <ul class="replys">
+    <!--返信を再帰的に呼び出し-->
+    <ul class="replys" v-if="showsReply">
         <li v-for="(post, index) in replys" :key="index">
             <Post :n="index + 1" :time="post.time" :id="post.id"
                 :commenter="post.commenter" :comment="post.comment"
@@ -35,7 +38,24 @@ export default {
     data(){
         return{
             posts: {},
-            moment: moment
+            showsReply: true,
+        }
+    },
+    methods: {
+        format(time) {
+            return moment(time).format("YYYY-MM-DD HH:mm:ss");
+        },
+        hasReply() {
+            return this.replys.length != 0;
+        },
+        switchReply() {
+            this.showsReply = !this.showsReply;
+        },
+        switchingMessage() {
+            if (this.showsReply) {
+                return "返信を非表示"
+            }
+            return "返信を表示"
         }
     }
 }
