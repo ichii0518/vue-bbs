@@ -1,7 +1,9 @@
 <template>
+<div id="container">
   <h1>掲示板</h1>
   <Board ref="board" @replyLinkClicked="this.$refs.form.setId($event)"></Board>
   <Form ref="form" @onPosted="this.$refs.board.loadPosts()"></Form>
+</div>
 </template>
 
 <script>
@@ -25,5 +27,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+#container {
+  max-width: 700px;
+  margin: 0 auto;
 }
 </style>
