@@ -110,7 +110,6 @@ export default {
             let path = ""
             let currentNode = post
             do {
-                console.log(currentNode)
                 let index = this.getPostIndexById(currentNode.id)
                 path = index + "/" + path
                 let parent = this.getPostById(currentNode.parentId)
