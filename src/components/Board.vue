@@ -3,7 +3,8 @@
         <li v-for="(post, index) in posts" :key="index">
             <Post :n="index + 1" :time="post.time" :id="post.id" 
                 :commenter="post.commenter" :comment="post.comment"
-                :replys="post.replys" @replyLinkClicked="$emit('replyLinkClicked', [$event, getPostIndexById($event)])">
+                :replys="post.replys"
+                :setId="setId" :getPostIndexById="this.getPostIndexById">
             </Post>
         </li>
     </ul>
@@ -19,6 +20,9 @@ export default {
         return{
             posts: []
         }
+    },
+    props: {
+        setId: Function
     },
     components: {
         Post

@@ -1,7 +1,7 @@
 <template>
 <div id="container">
   <h1>掲示板</h1>
-  <Board ref="board" @replyLinkClicked="this.$refs.form.setId($event)"></Board>
+  <Board ref="board" :setId="setId"></Board>
   <Form ref="form" @onPosted="this.$refs.board.loadPosts()"></Form>
 </div>
 </template>
@@ -15,6 +15,14 @@ export default {
   components: {
     Board,
     Form
+  },
+  data() {
+    return {
+      setId: null
+    }
+  },
+  mounted() {
+    this.setId = this.$refs.form.setId
   }
 }
 </script>

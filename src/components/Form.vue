@@ -20,7 +20,8 @@ export default {
             name: "",
             comment: "",
             parentId: void 0,
-            isReply: false
+            isReply: false,
+            destNum: 0
         }
     },
     methods: {
@@ -45,10 +46,8 @@ export default {
             this.name = "";
             this.comment = "";
         },
-        setId(event) {
-            let id = event[0];
-            let destNum = event[1];
-            console.log("idに" + destNum + "をセットしました");
+        setId(id, destNum) {
+            console.log(destNum + "(id:" + id + ")に返信");
             this.parentId = id;
             this.destNum = destNum
             this.isReply = true;
