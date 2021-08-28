@@ -46,6 +46,9 @@ export default {
                         })[0];
                         // 親のリプライとして追加
                         parent.replys.push(newpost);
+                        // ツリーの高さ1のところから削除
+                        let index = newposts.indexOf(newpost);
+                        newposts.splice(index, 1);
                     }
                 });
                 this.posts = newposts;
