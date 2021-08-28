@@ -110,11 +110,12 @@ export default {
             let path = ""
             let currentNode = post
             do {
+                console.log(currentNode)
                 let index = this.getPostIndexById(currentNode.id)
                 path = index + "/" + path
                 let parent = this.getPostById(currentNode.parentId)
                 currentNode = parent
-            } while (currentNode !== void 0);
+            } while (currentNode !== null);
             path = path.slice(0, -1)
             return path
         },
@@ -137,8 +138,9 @@ export default {
             let self = this
             for (let post of self.posts) {
                 let ret = self.searchPostById(post, id);
-                if (ret !== void 0) return ret
+                if (ret !== null) return ret
             }
+            return null;
         },
         searchPostById(currentPost, id) {
             // そのpostのidが探しているものと一致するならそれを返す
@@ -148,8 +150,9 @@ export default {
             // 全ての返信を探す
             for (let reply of currentPost.replys) {
                 let ret = this.searchPostById(reply, id)
-                if (ret !== void 0) return ret
+                if (ret !== null) return ret;
             }
+            return null;
         }
     },
     created() {
