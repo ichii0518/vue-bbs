@@ -1,9 +1,9 @@
 <template>
     <ul>
         <li v-for="(post, index) in posts" :key="index">
-            <Post :n="index + 1" :time="post.time" 
+            <Post :n="index + 1" :time="post.time" :id="post.id" 
                 :commenter="post.commenter" :comment="post.comment"
-                :replys="post.replys">
+                :replys="post.replys" @replyLinkClicked="$emit('replyLinkClicked', [$event, getPostIndexById($event)])">
             </Post>
         </li>
     </ul>
@@ -44,16 +44,24 @@ export default {
                         let parent = newposts.filter((post) => {
                             return post.id == newpost.parentId;
                         })[0];
-                        // 親のリプライとして追加
-                        parent.replys.push(newpost);
-                        // ツリーの高さ1のところから削除
-                        let index = newposts.indexOf(newpost);
-                        newposts.splice(index, 1);
+                        // 親のリプライとして追加(親が存在する場合のみ)
+                        if (parent !== void 0) {
+                            parent.replys.push(newpost);
+                            // ツリーの高さ1のところから削除
+                            let index = newposts.indexOf(newpost);
+                            newposts.splice(index, 1);
+                        } else{
+                            console.error("返信先の見つからないコメントがありました")
+                        }
                     }
                 });
                 this.posts = newposts;
-                console.log(this.posts[0])
             });
+        },
+        getPostIndexById(id) {
+            return this.posts.findIndex((post) => {
+                return post.id == id;
+            }) + 1;
         }
     },
     created() {

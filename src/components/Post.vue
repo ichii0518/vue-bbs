@@ -1,14 +1,18 @@
 <template>
     <div class="post">
-        <p><span v-if="isReply">Re:</span>{{ n }} {{ commenter }} {{ moment(time).format("YYYY-MM-DD HH:mm:ss") }}</p>
+        <p><span v-if="isReply">Re:</span>
+        {{ n }} {{ commenter }} {{ moment(time).format("YYYY-MM-DD HH:mm:ss") }}
+        <a href="#form" @click="$emit('replyLinkClicked', id)">返信</a>
+        </p>
         <p>{{ comment }}</p>
     </div>
     <!--再帰的に呼び出し-->
     <ul class="replys">
         <li v-for="(post, index) in replys" :key="index">
-            <Post :n="index + 1" :time="post.time" 
+            <Post :n="index + 1" :time="post.time" :id="post.id"
                 :commenter="post.commenter" :comment="post.comment"
-                :replys="post.replys" :isReply="true">
+                :replys="post.replys" :isReply="true"
+                @replyLinkClicked="$emit('replyLinkClicked', $event)">
             </Post>
         </li>
     </ul>
@@ -22,10 +26,12 @@ export default {
         n: Number,
         commenter: String,
         time: Date,
+        id: String,
         comment: String,
         replys: Array,
         isReply: Boolean
     },
+    emits: ["replyLinkClicked"],
     data(){
         return{
             posts: {},

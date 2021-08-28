@@ -1,7 +1,7 @@
 <template>
   <h1>掲示板</h1>
-  <Board ref="board"></Board>
-  <Form @onPosted="this.$refs.board.loadPosts()"></Form>
+  <Board ref="board" @replyLinkClicked="this.$refs.form.setId($event)"></Board>
+  <Form ref="form" @onPosted="this.$refs.board.loadPosts()"></Form>
 </template>
 
 <script>
