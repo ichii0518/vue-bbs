@@ -1,6 +1,6 @@
 <template>
     <form>
-        <p>名前：<input type = "text" v-model="name"></p>
+        <p>返信先：{{ parentId }} 名前：<input type = "text" v-model="name"></p>
         <p>コメント：<textarea v-model="comment" cols="70" rows="14"></textarea></p>
         <button @click="postComment" onclick="return false">送信</button>
     </form>
@@ -16,18 +16,20 @@ export default {
     data(){
         return{
             name: "",
-            comment:""
+            comment: "",
+            parentId: void 0,
         }
     },
     methods: {
         postComment() {
             let db = firebase.firestore();
-            let col = db.collection("comments")
+            let col = db.collection("comments");
             col.add(
                 {
                     "commenter": this.name,
                     "comment": this.comment,
-                    "time": firebase.firestore.Timestamp.now()
+                    "time": firebase.firestore.Timestamp.now(),
+                    "parentId": this.parentId
                 }
             )
             .then((docRef) => {
