@@ -68,7 +68,7 @@ export default {
         margin: 1rem auto;
     }
 
-        li {
+    li {
         list-style-type: none;
         position: relative;
     }
