@@ -1,8 +1,8 @@
 <template>
     <form id="form" @submit.prevent="postComment">
         <p><span v-if="isReply">返信先：{{ destNum }} 
-            <button @click="cancelReplying" onclick="return false">返信をキャンセル</button></span>
-         名前：<input type = "text" v-model="name" required></p>
+            <button type="button" @click="cancelReplying" onclick="return false">返信をキャンセル</button></span>
+         名前：<input type="text" v-model="name" required></p>
         <p>コメント：<textarea v-model="comment" cols="70" rows="14" required></textarea></p>
         <input type="submit">
     </form>
@@ -45,6 +45,7 @@ export default {
             this.$emit("onPosted");
             this.name = "";
             this.comment = "";
+            this.cancelReplying();
         },
         setId(id, destNum) {
             console.log(destNum + "(id:" + id + ")に返信");
