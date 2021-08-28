@@ -2,14 +2,15 @@
     <div class="post">
         <p><span v-if="isReply">Re:</span>
         {{ n }} {{ commenter }} {{ format(time) }}
-        <a href="#form" @click="$emit('replyLinkClicked', id)">返信</a>
+        <a href="#form" @click="$emit('replyLinkClicked', id)" class="reply">返信</a>
         </p>
         <p>{{ comment }}</p>
         <p v-if="hasReply()">
-            <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
+            <a href="javascript:void 0" @click="switchReply">{{ switchingMessage(replys.length) }}</a>
         </p>
     </div>
     <!--返信を再帰的に呼び出し-->
+    <transition>
     <ul class="replys" v-if="showsReply">
         <li v-for="(post, index) in replys" :key="index">
             <Post :n="index + 1" :time="post.time" :id="post.id"
@@ -18,7 +19,7 @@
                 @replyLinkClicked="$emit('replyLinkClicked', $event)">
             </Post>
         </li>
-    </ul>
+    </ul></transition>
 </template>
 
 <script>
@@ -51,11 +52,11 @@ export default {
         switchReply() {
             this.showsReply = !this.showsReply;
         },
-        switchingMessage() {
+        switchingMessage(nReplys) {
             if (this.showsReply) {
-                return "返信を非表示"
+                return "▲返信(" + nReplys +")を非表示"
             }
-            return "返信を表示"
+            return "▼返信(" + nReplys + ")を表示"
         }
     }
 }
@@ -95,5 +96,19 @@ export default {
         height: 10px;
         top: 2em;
         left: -1em;
+    }
+
+    .v-enter-from, .v-leave-to {
+        opacity: 0;
+    }
+    .v-enter-to, .v-leave-from {
+        opacity: 1;
+    }
+    .v-enter-active, .v-leave-active{
+        transition: opacity 100ms;
+    }
+
+    .reply {
+        color: inherit;
     }
 </style>
