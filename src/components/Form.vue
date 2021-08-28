@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import moment from "moment";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
@@ -22,16 +21,21 @@ export default {
     },
     methods: {
         postComment() {
-            let now = moment();
-            now
             let db = firebase.firestore();
             let col = db.collection("comments")
-            col.get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
-                });
-            });
+            col.add(
+                {
+                    "commenter": this.name,
+                    "comment": this.comment,
+                    "time": firebase.firestore.Timestamp.now()
+                }
+            )
+            .then((docRef) => {
+                console.log("コメントを送信しました", docRef.id)
+            })
+            .catch((e) => {
+                console.error("コメントの送信に失敗しました", e)
+            })
             this.$emit("onPosted");
             this.name = "";
             this.comment = "";
