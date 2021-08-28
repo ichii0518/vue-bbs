@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         loadPosts() {
-            let newposts = [];
+            let posts = [];
             let db = firebase.firestore();
             let col = db.collection("comments")
             col.get().then((querySnapshot) => {
@@ -35,28 +35,57 @@ export default {
                     data.time = data.time.toDate();
                     data.id = doc.id;
                     data.replys = [];
-                    newposts.push(data);
+                    posts.push(data);
+                    });
+                this.posts = this.makeTree(posts);
                 });
-                //投稿を木にする処理
-                newposts.forEach((newpost) => {
-                    if (newpost.parentId !== void 0) {
-                        // 親を探す
-                        let parent = newposts.filter((post) => {
-                            return post.id == newpost.parentId;
-                        })[0];
-                        // 親のリプライとして追加(親が存在する場合のみ)
-                        if (parent !== void 0) {
-                            parent.replys.push(newpost);
-                            // ツリーの高さ1のところから削除
-                            let index = newposts.indexOf(newpost);
-                            newposts.splice(index, 1);
-                        } else{
-                            console.error("返信先の見つからないコメントがありました")
+        },
+        makeTree(posts) {
+            let self = this;
+            // 返信ではないコメントをツリーに追加
+            let tree = [];
+            posts.forEach((post, index) => {
+                if (post.parentId === void 0) {
+                    tree.push(post);
+                    delete posts[index]
+                }
+            });
+            posts = posts.filter((element) => {return element !== void 0});
+            
+            while (posts.length != 0){
+                // 全てのpostをループ
+                posts.forEach((post, index) => {
+                    let result = false;
+                    // ツリーにpostを追加する
+                    for (let treeNode of tree) {
+                        result = self.addPost(treeNode, post);
+                        if (result) {
+                            delete posts[index];
+                            break;
                         }
                     }
                 });
-                this.posts = newposts;
-            });
+                posts = posts.filter((element) => {return element !== void 0});
+            }
+            return tree;
+        },
+        addPost(currentNode, post) {
+            let self = this;
+            // もし現在のノードに付けられるなら、つけてtrueを返す
+            if (currentNode.id == post.parentId) {
+                currentNode.replys.push(post)
+                return true;
+            } else {
+                // 現在のノードの子ノードを調査
+                let result = false
+                for (let treeNode of currentNode.replys) {
+                    result = self.addPost(treeNode, post)
+                    if (result) break //つけられたらfor文を抜ける
+                }
+                //このresultは子孫ノードのどこかにつけられればtrueになり、
+                //どこにもつけられなければfalseになる
+                return result;
+            }
         },
         getPostIndexById(id) {
             return this.posts.findIndex((post) => {
