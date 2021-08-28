@@ -40,9 +40,9 @@ export default {
                     data.id = doc.id;
                     data.replys = [];
                     posts.push(data);
-                    });
-                this.posts = this.sortByTime(this.makeTree(posts));
                 });
+                this.posts = this.sortByTime(this.makeTree(posts));
+            });
         },
         makeTree(posts) {
             let self = this;
