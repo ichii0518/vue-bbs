@@ -117,7 +117,7 @@ export default {
     }
 
     li:last-child::before {
-        height: 60%;
+        height: 2rem;
     }
 
     li::after {
