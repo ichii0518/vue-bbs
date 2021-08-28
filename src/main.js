@@ -18,5 +18,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+firebase.firestore().settings({ignoreUndefinedProperties: true});
 
 createApp(App).mount('#app')
