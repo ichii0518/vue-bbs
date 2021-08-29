@@ -10,7 +10,8 @@
         </p>
     </div>
     <!--返信を再帰的に呼び出し-->
-    <transition>
+    <transition @before-enter="beforeEnter" 
+        @enter="enter" @before-leave="beforLeave" @leave="leave">
     <ul class="replys" v-if="showsReply">
         <li v-for="(post, index) in replys" :key="index">
             <Post :n="index + 1" :time="post.time" :id="post.id"
@@ -59,6 +60,18 @@ export default {
                 return "▲返信(" + nReplys +")を非表示"
             }
             return "▼返信(" + nReplys + ")を表示"
+        },
+        beforeEnter(el) {
+            el.style.height = '0';
+        },
+        enter(el) {
+            el.style.height = el.scrollHeight + 'px';
+        },
+        beforeLeave(el) {
+            el.style.height = el.scrollHeight + 'px';
+        },
+        leave(el) {
+            el.style.height = '0';
         }
     }
 }
@@ -106,8 +119,11 @@ export default {
     .v-enter-to, .v-leave-from {
         opacity: 1;
     }
-    .v-enter-active, .v-leave-active{
-        transition: opacity 100ms;
+    .v-enter-active{
+        transition: height .4s ease-in-out, opacity .4s ease-in-out;
+    }
+    .v-leave-active{
+        transition: height .4s ease-in-out, opacity .2s ease-in-out;
     }
 
     .reply {
