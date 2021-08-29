@@ -65,4 +65,8 @@ export default {
     form {
         border: solid 0.1rem black;
     }
+
+    textarea {
+        max-width: 80%;
+    }
 </style>
