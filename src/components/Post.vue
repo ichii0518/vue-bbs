@@ -10,8 +10,8 @@
         </p>
     </div>
     <!--返信を再帰的に呼び出し-->
-    <transition @before-enter="beforeEnter" 
-        @enter="enter" @before-leave="beforLeave" @leave="leave">
+    <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
+     @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <ul class="replys" v-if="showsReply">
         <li v-for="(post, index) in replys" :key="index">
             <Post :n="index + 1" :time="post.time" :id="post.id"
@@ -67,12 +67,18 @@ export default {
         enter(el) {
             el.style.height = el.scrollHeight + 'px';
         },
+        afterEnter(el) {
+            el.style.height = 'auto';
+        },
         beforeLeave(el) {
             el.style.height = el.scrollHeight + 'px';
         },
         leave(el) {
             el.style.height = '0';
-        }
+        },
+        afterLeave(el) {
+            el.style.height = 'auto';
+        },
     }
 }
 </script>
