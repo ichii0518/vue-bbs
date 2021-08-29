@@ -1,31 +1,10 @@
 <template>
-<div id="container">
-  <h1>掲示板</h1>
-  <Board ref="board" :setId="setId"></Board>
-  <Form ref="form" @onPosted="this.$refs.board.loadPosts()"></Form>
-</div>
+  <div id="nav">
+    <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link>
+  </div>
+  <router-view/>
 </template>
-
-<script>
-import Board from "./components/Board.vue"
-import Form from './components/Form.vue'
-
-export default {
-  name: 'App',
-  components: {
-    Board,
-    Form
-  },
-  data() {
-    return {
-      setId: null
-    }
-  },
-  mounted() {
-    this.setId = this.$refs.form.setId
-  }
-}
-</script>
 
 <style>
 #app {
@@ -34,11 +13,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
-#container {
-  max-width: 700px;
-  margin: 0 auto;
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>
