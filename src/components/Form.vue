@@ -43,7 +43,6 @@ export default {
                 console.error("コメントの送信に失敗しました", e)
             })
             this.$emit("onPosted");
-            this.name = "";
             this.comment = "";
             this.cancelReplying();
         },
