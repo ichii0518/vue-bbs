@@ -3,7 +3,6 @@
   <h1>掲示板</h1>
   <Board ref="board" :setId="setId"></Board>
   <Form ref="form" @onPosted="this.$refs.board.loadPosts()"></Form>
-  <p>test</p>
 </div>
 </template>
 
