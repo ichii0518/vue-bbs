@@ -70,15 +70,16 @@ export default {
         },
         getPostPathById(id){
             let post = this.getPostById(id)
-            let path = ""
-            let currentNode = post
-            do {
-                let index = this.getPostIndexById(currentNode.id)
-                path = index + "/" + path
-                currentNode = currentNode.parent
-            } while (typeof currentNode !== "undefined");
-            path = path.slice(0, -1)
-            return path
+            return this.getPostPath(post)
+        },
+        getPostPath(post) {
+            let index = this.getPostIndexById(post.id)
+            if (typeof post.parent === "undefined") {
+                return index       
+            } else {
+                let parentPath = this.getPostPath(post.parent)
+                return parentPath + "/" + index
+            }
         },
         getPostIndexById(id) {
             let self = this
