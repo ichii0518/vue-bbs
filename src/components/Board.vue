@@ -75,9 +75,8 @@ export default {
             do {
                 let index = this.getPostIndexById(currentNode.id)
                 path = index + "/" + path
-                let parent = this.getPostById(currentNode.parentId)
-                currentNode = parent
-            } while (currentNode !== null);
+                currentNode = currentNode.parent
+            } while (typeof currentNode !== "undefined");
             path = path.slice(0, -1)
             return path
         },
@@ -90,9 +89,8 @@ export default {
                     return p == post;
                 }) + 1;
             }
-            // 返信である場合、親を取得し、親の返信の中でのインデックスを取得する
-            let parent = self.getPostById(post.parentId)
-            return parent.replys.findIndex((p) => {
+            // 返信である場合、親の返信の中でのインデックスを取得する
+            return post.parent.replys.findIndex((p) => {
                     return p == post;
             }) + 1;
         },
