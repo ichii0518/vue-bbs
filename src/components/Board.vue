@@ -45,55 +45,18 @@ export default {
             });
         },
         makeTree(posts) {
-            let self = this;
-            /* 返信ではないコメントをツリーに追加、
-            追加したコメントをpostsから消していく*/
-            let tree = [];
-            posts.forEach((post, index) => {
-                if (post.parentId === void 0) {
-                    tree.push(post);
-                    delete posts[index]
+            for (let post of posts){
+                if (typeof post.parentId !== "undefined") {
+                    post.parent = posts.find((p) => {
+                        return p.id == post.parentId;
+                    });
+                    post.parent.replys.push(post);
                 }
-            });
-            // 配列を詰める
-            posts = posts.filter((element) => {return element !== void 0});
-            
-            // postsが空になるまで繰り返す
-            while (posts.length != 0){
-                // 全てのpostをループ
-                posts.forEach((post, index) => {
-                    let result = false;
-                    // ツリーにpostを追加する、成功したらpostsから消す
-                    for (let treeNode of tree) {
-                        result = self.addPost(treeNode, post);
-                        if (result) {
-                            delete posts[index];
-                            break;
-                        }
-                    }
-                });
-                // 配列を詰める
-                posts = posts.filter((element) => {return element !== void 0});
             }
-            return tree;
-        },
-        addPost(currentNode, post) {
-            let self = this;
-            // もし現在のノードに付けられるなら、つけてtrueを返す
-            if (currentNode.id == post.parentId) {
-                currentNode.replys.push(post)
-                return true;
-            } else {
-                // 現在のノードの子ノードを調査
-                let result = false
-                for (let treeNode of currentNode.replys) {
-                    result = self.addPost(treeNode, post)
-                    if (result) break //つけられたらfor文を抜ける
-                }
-                /*このresultは子孫ノードのどこかにつけられればtrueになり、
-                どこにもつけられなければfalseになる*/
-                return result;
-            }
+            posts = posts.filter((post) => {
+                return typeof post.parentId === "undefined"
+            })
+            return posts
         },
         sortByTime(tree) {
             let self = this
